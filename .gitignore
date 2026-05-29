@@ -1,0 +1,12 @@
+# debate run artifacts
+debate_run/
+*.debate_state.json
+debate_state.json
+
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# os
+.DS_Store
