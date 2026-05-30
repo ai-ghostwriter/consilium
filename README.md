@@ -13,9 +13,9 @@ multiple rounds, then has a neutral judge decide when they've genuinely converge
 — not just when they're being polite. The output is a single, actionable
 decision.
 
-It is packaged as a [Claude Code Skill](https://docs.claude.com/en/docs/claude-code/skills)
-but the orchestrator (`scripts/consilium.py`) is a standalone Python script you
-can run from any shell.
+It is packaged as a [Claude Code plugin](https://docs.claude.com/en/docs/claude-code/plugins)
+(and skill), but the orchestrator (`skills/consilium/scripts/consilium.py`) is a
+standalone Python script you can run from any shell.
 
 ## Why use it
 
@@ -53,7 +53,18 @@ Each round: both debaters critique the opponent, integrate what's valid, emit a
 revised position and a self-score. A judge then rules on convergence. Triple stop
 condition: **budget** (max rounds) + **self-score** + **judge verdict**.
 
-## Quick start
+## Install as a plugin
+
+Consilium is listed in the `codex-coprocessor` marketplace alongside the other
+Claude+Codex tools.
+
+```text
+# in Claude Code:
+/plugin marketplace add ai-ghostwriter/codex-coprocessor
+/plugin install consilium@codex-coprocessor
+```
+
+## Quick start (standalone script)
 
 ```bash
 # 1. Make sure both CLIs are installed and authenticated
@@ -61,10 +72,10 @@ claude --version
 codex --version
 
 # 2. Run a debate
-python scripts/consilium.py "Should we migrate the API from REST to gRPC?"
+python skills/consilium/scripts/consilium.py "Should we migrate the API from REST to gRPC?"
 
 # 3. (optional) Max-neutrality cross-vendor judging
-python scripts/consilium.py "Postgres vs DynamoDB for this workload?" \
+python skills/consilium/scripts/consilium.py "Postgres vs DynamoDB for this workload?" \
     --judge-mode panel --repo-path /path/to/repo
 ```
 
@@ -82,8 +93,8 @@ stdout = the final actionable decision. The full transcript is saved to
 | `--repo-path` | none | Codebase the debaters can read |
 | `--lang` | `English` | Language of the content and final decision |
 
-See [`SKILL.md`](SKILL.md) for the full behavior reference, including panel-mode
-reconciliation.
+See [`skills/consilium/SKILL.md`](skills/consilium/SKILL.md) for the full behavior
+reference, including panel-mode reconciliation.
 
 ## Requirements
 
@@ -91,43 +102,19 @@ reconciliation.
 - [`claude`](https://docs.claude.com/en/docs/claude-code) CLI, authenticated
 - [`codex`](https://github.com/openai/codex) CLI, authenticated
 
-## Installing as a Claude Code skill
-
-Claude Code discovers skills in your **central skills directory**,
-`~/.claude/skills/`. The folder name there must match the skill name
-(`consilium`). Two ways to set it up:
-
-### Option A — Clone directly into the central skills directory
-
-Simplest. The repo *is* the installed skill.
+## Manual install (skill only, no plugin)
 
 ```bash
-git clone https://github.com/ai-ghostwriter/consilium.git ~/.claude/skills/consilium
-```
-
-Update later with `git -C ~/.claude/skills/consilium pull`.
-
-### Option B — Keep the repo separate, link it with a symlink
-
-Best if you keep all your skills/projects in one development folder and want the
-central directory to hold only links. Edit in one place, `git pull` in one place,
-and the symlink keeps `~/.claude/skills/` in sync.
-
-```bash
-# clone wherever you develop
 git clone https://github.com/ai-ghostwriter/consilium.git ~/dev/consilium
-
-# link it into the central skills directory
-ln -s ~/dev/consilium ~/.claude/skills/consilium
+ln -s ~/dev/consilium/skills/consilium ~/.claude/skills/consilium
 ```
 
-Verify it resolves: `ls -l ~/.claude/skills/consilium`. Then ask Claude Code to
-"have Claude and Codex debate X".
+Then ask Claude Code to "have Claude and Codex debate X".
 
 ## Testing
 
 ```bash
-bash scripts/test_smoke.sh   # offline, stubbed CLIs, no tokens spent
+bash skills/consilium/scripts/test_smoke.sh   # offline, stubbed CLIs, no tokens spent
 ```
 
 Expected: `ALL TESTS PASSED`. CI runs this on every push (see
@@ -135,7 +122,7 @@ Expected: `ALL TESTS PASSED`. CI runs this on every push (see
 
 ## See also
 
-- [`examples/sample-debate.md`](examples/sample-debate.md) — a worked transcript.
+- [`skills/consilium/examples/sample-debate.md`](skills/consilium/examples/sample-debate.md) — a worked transcript.
 
 ## License
 

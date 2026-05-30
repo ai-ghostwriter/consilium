@@ -1,0 +1,19 @@
+{
+  "name": "consilium",
+  "description": "Structured debate loop between two peer AI agents — Claude Code and Codex — that argue a topic across multiple rounds, refereed by an independent judge, until they converge on one actionable decision.",
+  "version": "0.1.0",
+  "author": {
+    "name": "ai-ghostwriter",
+    "email": "ghostwriter.joker@gmail.com"
+  },
+  "homepage": "https://github.com/ai-ghostwriter/consilium",
+  "repository": "https://github.com/ai-ghostwriter/consilium",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "codex",
+    "debate",
+    "multi-agent",
+    "decision-making"
+  ]
+}

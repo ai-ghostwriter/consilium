@@ -14,4 +14,4 @@ jobs:
         with:
           python-version: "3.11"
       - name: Run offline smoke test (stubbed CLIs, no tokens)
-        run: bash scripts/test_smoke.sh
+        run: bash skills/consilium/scripts/test_smoke.sh
